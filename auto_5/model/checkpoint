@@ -1,0 +1,4 @@
+model_checkpoint_path: "/root/work/design/auto_5/model/poems-48"
+all_model_checkpoint_paths: "/root/work/design/auto_5/model/poems-36"
+all_model_checkpoint_paths: "/root/work/design/auto_5/model/poems-42"
+all_model_checkpoint_paths: "/root/work/design/auto_5/model/poems-48"
