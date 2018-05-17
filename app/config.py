@@ -6,10 +6,10 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-  SECRET_KEY = os.environ.get('SECRET_KEY') or 'QWer12345678.,mn'
-  API_KEY = os.environ.get('API_KEY') or '666ZhangWangLuTin00SweetHeart999'
-  APP_ID = 'wx1bd3022be6b18895'
-  MCH_ID = '1443221402'
+  SECRET_KEY = os.environ.get('SECRET_KEY') or '13c731251b2463665f6534be482de371'
+  #API_KEY = os.environ.get('API_KEY') or '666ZhangWangLuTin00SweetHeart999'
+  APP_ID = 'wx7940e4ebbf37a46d'
+  #eCH_ID = '1443221402'
   #UPLOAD_FOLDER = '/home/ubuntu/SweetHeart/imgs/upload'
   ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'JPG',  'jpeg', 'gif'])
 

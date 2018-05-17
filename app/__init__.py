@@ -26,8 +26,8 @@ def create_app(config_name):
   login_manager.init_app(app)
 
   # 注册授权服务蓝本
-  #from .auth import auth as auth_blueprint
-  #app.register_blueprint(auth_blueprint, url_prefix='/auth')
+  from .auth import auth as auth_blueprint
+  app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
   # 注册主程序蓝本，解决路由和自定义错误页面处理程序
   from .main import main as main_blueprint

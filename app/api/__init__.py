@@ -2,4 +2,4 @@ from flask import Blueprint
 
 api = Blueprint('api', __name__)
 
-from .import poems, generate_poetry, poetry_rank
+from .import my_poetry, generate_poetry, poetry_rank, image, my_draft

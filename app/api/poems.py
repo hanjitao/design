@@ -31,14 +31,13 @@ def get_loved_poetry():
     res = []
     for poetry in poetrys:
         res.append(poetry.to_dict())
-    print(poetrys)
     if not poetrys:
         return jsonify({
             'title': '喜欢的诗',
             'subjects': []
         })
     return jsonify({
-        'title': 'test',
+        'title': '喜欢的诗',
         'subjects': res
     })
 
@@ -55,7 +54,7 @@ def get_new_poetry_by_id():
             'subjects': {}
         })
     return jsonify({
-        'title': 'test',
+        'title': '诗',
         'subjects': poetry.to_dict()
     })
 
@@ -74,7 +73,7 @@ def get_my_poetry():
             'subjects': []
         })
     return jsonify({
-        'title': 'test',
+        'title': '我的作品',
         'subjects': res
     })
 
@@ -93,7 +92,7 @@ def get_my_public():
             'subjects': []
         })
     return jsonify({
-        'title': 'test',
+        'title': '我的发布',
         'subjects': res
     })
 
@@ -122,6 +121,8 @@ def get_my_collect():
     user_id = request.args.get('user_id', 1)
     user_action_all= User_Action.query.filter_by(user_id=user_id, collect=1).all()
     pids = [user_action.pid for user_action in user_action_all]
+    print(pids)
+    print('0000000000000000000000000000000')
     poetrys = New_Poetry.query.filter(New_Poetry.id.in_(pids)).all()
 
     res = []
@@ -133,7 +134,7 @@ def get_my_collect():
             'subjects': []
         })
     return jsonify({
-        'title': 'test',
+        'title': '我的收藏',
         'subjects': res
     })
 
@@ -152,7 +153,7 @@ def get_waste_poetry():
             'subjects': []
         })
     return jsonify({
-        'title': 'test',
+        'title': '废纸篓',
         'subjects': res
     })
 
