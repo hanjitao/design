@@ -11,7 +11,8 @@ def get_poetry(describe, ptype):
 
     print('type uis ...........')
     print(ptype)
-    port = 8080 if ptype == 5 else 8081
+    #port = 8080 if ptype == 5 else 8081
+    port = 8083
     client = socket.socket()
     client.connect(('localhost',port))
 
@@ -19,18 +20,28 @@ def get_poetry(describe, ptype):
         describe = '春'
 
     client.send(describe.encode('utf-8'))
-    content = client.recv(1024).decode()
-    print(content)
-    print(type(content))
+    data = client.recv(1024).decode()
+    a = data.split('|')
+    title = a[0]
+    content = a[1]
+    print('title is', title)
+    print('content is', content)
     client.close()
-    return content
+    return title, content
 
 
 
 @api.route('/generate_new_poetry')
 def generate_new_poetry():
-    user_id = request.args.get('user_id', 1)
-    user_name = request.args.get('user_name', '看不透')
+    user_id = request.args.get('user_id', 0)
+    user_name = request.args.get('user_name', 'visitor')
+    if user_id == 'undefined':
+        user_id = 0
+        print('user_id is undefined')
+    user_id = int(user_id)
+    if user_id:
+        user = User.query.filter(User.id == user_id).first()
+        user_name = user.nickName
     ptype = request.args.get('type',5)
     ptype = int(ptype)
     auto = request.args.get('auto',1)
@@ -39,10 +50,11 @@ def generate_new_poetry():
     if not title:
         title = '无题'
 
+    print("eeeeeeeeeeeeeeeeeeeee", user_name, user_id)
     create_time = int(time.time())
 
     if auto:
-        content = get_poetry(describe, ptype)
+        title,  content = get_poetry(describe, ptype)
     else:
         content = request.args.get('content', '')
 
@@ -93,8 +105,8 @@ def user_action():
             db.session.add(action)
             print("not have it")
         else:
-            action.praise = praise
-            action.collect = collect
+            action.praise += int(praise)
+            action.collect += int(collect)
             print("have it")
 
         poetry = New_Poetry.query.filter_by(id=pid).first()
@@ -103,8 +115,13 @@ def user_action():
         poetry.save = save
         db.session.commit()
 
+        res = poetry.to_dict()
+        res['praise'] = action.praise
+        res['collect'] = action.collect
+        print('user_action res is', res)
         return jsonify({
             'message': 'success',
+            'subjects': res,
         })
     except Exception as e:
         return jsonify({
@@ -123,9 +140,10 @@ def save_poetry():
         user_id = poetry.get('user_id',0)
         user = User.query.filter(User.id == user_id).first()
         user_name = user.nickName
+        print("eeeeeeeeeeeeeeeeeeeee", user_name, user_id)
 
     content = poetry.get('content','-')
-    describe = poetry.get('describe','')
+    describe = poetry.get('input','')
     create_time = poetry.get('create_time', int(time.time()))
     title = poetry.get('title','无题')
     ptype = poetry.get('type',5)

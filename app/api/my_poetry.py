@@ -47,8 +47,8 @@ def get_new_poetry_by_id():
     user_id = request.args.get('user_id', 0)
     id = int(id)
     user_id = int(user_id)
-    poetry = New_Poetry.query.filter_by(id=id).first()
-    action = User_Action.query.filter_by(user_id=user_id, pid=id).first()
+    poetry = New_Poetry.query.filter(New_Poetry.id == id).first()
+    action = User_Action.query.filter(User_Action.user_id == user_id, User_Action.pid == id).first()
     res = poetry.to_dict()
 
     if action:
@@ -65,6 +65,7 @@ def get_new_poetry_by_id():
     print("-------------------OVER")
     print(id)
 
+    print(res)
     #loved_poetry = {}
     if not poetry:
         return jsonify({
