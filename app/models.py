@@ -258,3 +258,20 @@ class Appraise(db.Model):
         self.coherence = coherence,
         self.meaning = meaning,
         self.message = message,
+
+class Attention(db.Model):
+    __tablename__ = 'attention'
+    id = db.Column(db.Integer, index=True, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=True)
+    attention_uid = db.Column(db.Integer, nullable=True)
+    status = db.Column(db.Integer, default=0)
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    modify_time = db.Column(db.DateTime, default=datetime.now())
+
+    def __repr__(self):
+        return 'Attention..'
+
+    def __init__(self, user_id, attention_uid, status):
+        self.user_id = user_id,
+        self.attention_uid=  attention_uid,
+        self.status = status,

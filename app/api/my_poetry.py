@@ -86,7 +86,7 @@ def get_my_poetry():
     flag = int(flag)
     print(user_id)
 
-    poetrys = New_Poetry.query.filter(New_Poetry.creator_id==user_id, New_Poetry.public ==0 , New_Poetry.save==1).all()
+    poetrys = New_Poetry.query.filter(New_Poetry.creator_id==user_id,New_Poetry.public==0, New_Poetry.save==1).all()
 
     res = []
     if flag == -1:
@@ -104,11 +104,11 @@ def get_my_poetry():
     print('res is',res)
     if not poetrys:
         return jsonify({
-            'title': '我的作品',
+            'title': '我的保存',
             'subjects': []
         })
     return jsonify({
-        'title': '我的作品',
+        'title': '我的保存',
         'subjects': res
     })
 
@@ -127,7 +127,7 @@ def get_my_public():
         res.append(poetry.to_dict())
     if not poetrys:
         return jsonify({
-            'title': '我的作品',
+            'title': '我的发布',
             'subjects': []
         })
     return jsonify({

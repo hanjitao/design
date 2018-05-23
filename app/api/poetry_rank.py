@@ -1,7 +1,7 @@
 from flask import jsonify, request, url_for
 from . import api
 from .. import db
-from ..models import Poems, Loved_Poetry, New_Poetry, User_Action
+from ..models import Attention, Poems, Loved_Poetry, New_Poetry, User_Action
 
 @api.route('/get_recommend_rank')
 def get_recommend_rank():
@@ -22,7 +22,7 @@ def get_recommend_rank():
         for poetry in poetrys:
             if poetry.id == flag:
                 num = 1
-            if num > 0 and num <= 20:
+            elif num > 0 and num <= 21:
                 num += 1
                 res.append(poetry.to_dict())
 
@@ -57,7 +57,7 @@ def get_newest_rank():
         for poetry in poetrys:
             if poetry.id == flag:
                 num = 1
-            if num > 0 and num <= 20:
+            elif num > 0 and num <= 21:
                 num += 1
                 res.append(poetry.to_dict())
 
@@ -89,7 +89,7 @@ def get_hottest_rank():
         for poetry in poetrys:
             if poetry.id == flag:
                 num = 1
-            if num > 0 and num <= 20:
+            elif num > 0 and num <= 21:
                 num += 1
                 res.append(poetry.to_dict())
 
@@ -121,7 +121,7 @@ def get_praise_rank():
         for poetry in poetrys:
             if poetry.id == flag:
                 num = 1
-            if num > 0 and num <= 20:
+            elif num > 0 and num <= 21:
                 num += 1
                 res.append(poetry.to_dict())
 
@@ -154,7 +154,7 @@ def get_collect__rank():
         for poetry in poetrys:
             if poetry.id == flag:
                 num = 1
-            if num > 0 and num <= 20:
+            elif num > 0 and num <= 21:
                 num += 1
                 res.append(poetry.to_dict())
     if not poetrys:
@@ -182,6 +182,41 @@ def get_city_rank():
         })
     return jsonify({
         'title': '同城圈',
+        'subjects': res
+    })
+
+@api.route('/get_attention_rank')
+def get_attention_rank():
+    user_id = request.args.get('user_id', 0)
+    flag = request.args.get('flag', -1)
+    user_id = int(user_id)
+    flag = int(flag)
+
+    attentions = Attention.query.filter(Attention.user_id == user_id, Attention.status == 1).all()
+    uids = [ a.attention_uid for a in attentions]
+
+    poetrys = New_Poetry.query.filter(New_Poetry.creator_id.in_(uids), New_Poetry.save==1, New_Poetry.public==1) \
+        .order_by(New_Poetry.public_time.desc()).all()
+    res = []
+    if flag == -1:
+        for poetry in poetrys[0:20]:
+            res.append(poetry.to_dict())
+    else:
+        num = 0
+        for poetry in poetrys:
+            if poetry.id == flag:
+                num = 1
+            elif num > 0 and num <= 21:
+                num += 1
+                res.append(poetry.to_dict())
+
+    if not poetrys:
+        return jsonify({
+            'title': '关注',
+            'subjects': []
+        })
+    return jsonify({
+        'title': '关注',
         'subjects': res
     })
 

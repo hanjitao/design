@@ -1,7 +1,7 @@
 from flask import jsonify, request, url_for
 from . import api
 from .. import db
-from ..models import Poems, Loved_Poetry, New_Poetry, User_Action, User
+from ..models import Poems, Attention, Loved_Poetry, New_Poetry, User_Action, User
 import socket
 import time
 import json
@@ -175,5 +175,57 @@ def save_poetry():
         'subjects': poetry.to_dict(),
 
     })
+
+@api.route('/modify_attention')
+def modify_attention():
+    user_id = request.args.get('user_id', 0)
+    attention_uid = request.args.get('attention_uid', 0)
+    status = request.args.get('status',0)
+    user_id = int(user_id)
+    attention_uid = int(attention_uid)
+    status = int(status)
+    try:
+        attention = Attention.query.filter(Attention.user_id == user_id, \
+                    Attention.attention_uid == attention_uid).first()
+        if not attention:
+            attention = Attention(user_id, attention_uid, status)
+            db.session.add(attention)
+        else:
+            attention.status = status
+
+        db.session.commit()
+
+        res = {}
+        return jsonify({
+            'message': 'success',
+            'subjects': res,
+        })
+    except Exception as e:
+        return jsonify({
+            'message' : 'error'
+        })
+
+@api.route('/get_attention_list')
+def get_attention_list():
+    user_id = request.args.get('user_id', 0)
+    user_id = int(user_id)
+    try:
+        attentions = Attention.query.filter(Attention.user_id == user_id, \
+                    Attention.status == 1).all()
+
+        uids = [ a.attention_uid for a in attentions]
+        users = User.query.filter(User.id.in_(uids)).all()
+        res = []
+        for user in users:
+            res.append(user.to_dict())
+
+        return jsonify({
+            'message': 'success',
+            'subjects': res,
+        })
+    except Exception as e:
+        return jsonify({
+            'message' : 'error'
+        })
 
 
