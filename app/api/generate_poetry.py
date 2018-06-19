@@ -5,14 +5,19 @@ from ..models import Poems, Attention, Loved_Poetry, New_Poetry, User_Action, Us
 import socket
 import time
 import json
-
+import random
 
 def get_poetry(describe, ptype):
 
     print('type uis ...........')
     print(ptype)
     #port = 8080 if ptype == 5 else 8081
-    port = 8083
+    a=random.randint(0,1)
+    if a:
+        port = 8081
+    else:
+        port = 8082
+    print("port is", port)
     client = socket.socket()
     client.connect(('localhost',port))
 
@@ -227,5 +232,15 @@ def get_attention_list():
         return jsonify({
             'message' : 'error'
         })
+
+@api.route('/get_hotkeys')
+def get_hotkeys():
+    user_id = request.args.get('user_id', 0)
+    user_id = int(user_id)
+
+    res = ['春天','忧伤','开心','孤独','一阵微风吹过']
+    return jsonify({
+        'subjects': res,
+    })
 
 

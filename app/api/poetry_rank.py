@@ -10,8 +10,18 @@ def get_recommend_rank():
     flag = request.args.get('flag', -1)
     user_id = int(user_id)
     flag = int(flag)
-    poetrys = New_Poetry.query.filter(New_Poetry.save==1, New_Poetry.public==1)\
+    poetrys1 = New_Poetry.query.filter(New_Poetry.save==1, New_Poetry.public==1)\
         .order_by(New_Poetry.public_time.desc()).all()
+
+    poetrys2 = New_Poetry.query.filter(New_Poetry.save==1, New_Poetry.public==1)\
+        .order_by(New_Poetry.praise_num.desc()).all()
+
+    poetrys = []
+    for i, x in enumerate(poetrys1):
+        if poetrys1[i] not in poetrys:
+            poetrys.append(poetrys1[i])
+        if poetrys2[i] not in poetrys:
+            poetrys.append(poetrys2[i])
 
     res = []
     if flag == -1:
