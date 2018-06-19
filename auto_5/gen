@@ -1,2 +1,0 @@
-useuser_r_ create_time, auto)
-user_name = requestargs.get('user_name', '看不透')
